@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>NR OptiVoyage Dashboard</title>
     
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOHfZ...f3FajUAAAAASUVORK5CYII=" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -17,251 +19,241 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
     
-            <meta name="viewport" content="width=device-width,
-                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-            <style>
-                #map_64192451556e7fad9e763d41da0e6805 {
-                    position: relative;
-                    width: 100.0%;
-                    height: 100.0%;
-                    left: 0.0%;
-                    top: 0.0%;
-                }
-                .leaflet-container { font-size: 1rem; }
-            </style>
-
-            <style>html, body {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            </style>
-
-            <style>#map {
-                position:absolute;
-                top:0;
-                bottom:0;
-                right:0;
-                left:0;
-                }
-            </style>
-
-            <script>
-                L_NO_TOUCH = false;
-                L_DISABLE_3D = false;
-            </script>
-
-        
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     
-                <style>
-                    #float_image_63ba0e49fde4c6a2f34a073bcfe94144 {
-                        position: absolute;
-                        bottom: 3%;
-                        left: 82%;
-                          width: 140;
-                        }
-                </style>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        /* Fixing Map to be Absolutely Full Screen */
+        #map_64192451556e7fad9e763d41da0e6805 {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .leaflet-container { font-size: 1rem; }
+    </style>
             
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css"/>
 </head>
 <body>
     
-    
-<div id="dashboard_container" style="
-    position: fixed; bottom: 20px; right: 20px; width: 360px;
-    background-color: rgba(20, 30, 48, 0.95); color: white; z-index: 9999;
-    border: 1px solid #00e5ff; border-radius: 8px;
-    box-shadow: 0px 0px 20px rgba(0, 229, 255, 0.3); font-family: 'Segoe UI', sans-serif;
-    overflow: hidden; backdrop-filter: blur(5px);
+    <div id="floating_brand" style="
+        position: fixed; top: 20px; left: 70px; z-index: 9999;
+        background-color: rgba(255, 255, 255, 0.95); padding: 8px 16px;
+        border-radius: 8px; box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        display: flex; align-items: center; border-bottom: 3px solid #ed1c24;
+        font-family: 'Segoe UI', sans-serif; backdrop-filter: blur(4px);
     ">
-    <div id="dashboard_header" style="background-color: white; padding: 10px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #ed1c24;">
-        <div style="display:flex; align-items:center;">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAbFBMVEX///8AI5L/78D/9+H/9+L/89//893/8NT/7sD/7L//7L7/9uD/9uH/8Nf/8Nr/677/673/6rv/6rr/9N//8dn/8Nb/6rn/6rj/9N7/8df/57b/57X/5bP/8tf/5rL/5rH/5LD/5bD/467/46//4q2Ty/qPAAAIQUlEQVR4nO2daXeiOhCGGXbDvi+IuNSp1tr//8O+TCAgS0hCgOQ853TonI8JyczLpKq6CoX2F1Wj0Ww2m63WcrlcrTfbf1Wj/rBcrTfrzWazzT/o9/uHw+F0Oj8fDof9fv9P/2K13Gy3u91uv9/v9/vdbrvdrJfL/1Y16vf74+l8eX29vLycTsf9fv/v/mK12u72h+P58vryfD6fD8f9bre12q/6/fF8u72/397ebs/n4/7f/cVqtTscz9fb+/v72/PpeDjsVuvl3/7JcDzfPu7v7x8ft+fz8T/8xWq9P56vt4/7+/vH7fl42K/W/7Vq1O+P5/vH/f3j4/Z8PPyHv1itD8fz7eP+/vFxe764V0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNujVqOBwOh8PhcPgHNRwOh8PhcDgcDoc/V+P5fH19fX19PZ/Px/2/q0bz5Xw+n8/n8/lyOp72u3/R9HI+n8/n8/l8OR33u93War9qPp/P5/P5fD5fTseDddVqOp/P5/P5fD5fTsf9ar382z8Zz+fz+Xw+ny+nw2G3Wv/HqsnlfD6fz+fz5XQ47Fbr/1o1ms/n8/l8Pp8vp+Nht/q31Xg+n8/n8/l8Ph33u93f/cVkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMptV6s9lstpvNZrPZbDabrWaT9ZPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMptV6s9lstpvNZrPZbDabrWaT9ZPJZDKZTCaTyWQymUwmk8lkMplMpv9ajebL+Xw+n8/ny+l42K3W/7Vq1O+P59vt/f329nZ7Ph/3/+4vVqvd4Xi+3t7f39+eT8fDYbdaL//2T4bj+fZxf3//+Lg9n4//4S9W6/3xfL193N/fP27Px8N+tf6vVaN+fzzfP+7vHx+35+PhP/zFajUAAAAASUVORK5CYII=" style="height: 35px; margin-right: 10px;">
-            <div style="color: #005eb8; font-weight: 800; font-size: 14px; line-height: 1.2;">NR OptiVoyage</div>
-        </div>
-        <button onclick="toggleDashboard()" id="btn_toggle" style="background:#eee; border:none; color:#333; border-radius:3px; cursor:pointer; font-weight:bold; width:25px;">-</button>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOHfZ...f3FajUAAAAASUVORK5CYII=" style="height: 35px; margin-right: 12px;">
+        <div style="color: #005eb8; font-weight: 800; font-size: 15px; line-height: 1.2; letter-spacing: 0.5px;">NR OptiVoyage</div>
     </div>
     
-    <div id="dashboard_content" style="padding: 15px; max-height: 80vh; overflow-y: auto;">
+    <div id="dashboard_container" style="
+        position: fixed; bottom: 20px; right: 20px; width: 360px;
+        background-color: rgba(20, 30, 48, 0.95); color: white; z-index: 9999;
+        border: 1px solid #00e5ff; border-radius: 8px;
+        box-shadow: 0px 0px 20px rgba(0, 229, 255, 0.3); font-family: 'Segoe UI', sans-serif;
+        overflow: hidden; backdrop-filter: blur(5px);
+        ">
         
-        <div id="media_container" style="display:none; width:100%; height:250px; margin-bottom:10px; border:1px solid #f44336; border-radius:5px; overflow:hidden; position:relative;">
-            <div style="position:absolute; top:5px; right:5px; z-index:1000;">
-                 <button onclick="window.open(document.getElementById('media_iframe').src, '_blank')" style="background:black; color:white; border:none; font-size:9px; cursor:pointer;">↗ Open New Tab</button>
-            </div>
-            <iframe id="media_iframe" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
-        </div>
-
-        <div style="background-color: rgba(0,100,255,0.1); padding:8px; border-radius:5px; border:1px solid #00e5ff; margin-bottom:10px;">
-            <strong style="color:#00e5ff; font-size:10px;">🔍 CARI POSISI KAPAL</strong>
-            <div style="display:flex; justify-content:space-between; margin-top:5px;">
-                <input type="text" id="inp_ship_name" placeholder="Nama Kapal (Ex: NR SATU)" style="width:70%; font-size:10px; padding:3px; background:#111; color:white; border:1px solid #555;">
-                <button onclick="searchShip()" style="width:25%; background:#00e5ff; color:black; border:none; cursor:pointer; font-weight:bold; font-size:10px;">CARI ↗</button>
-            </div>
-        </div>
-
-        <div style="border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 10px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <button onclick="toggleLock()" id="btn_lock" style="width:100%; background:#d32f2f; color:white; border:none; cursor:pointer; font-weight:bold; font-size:10px; padding:4px;">🔒 EDIT MODE: LOCKED (Click to Unlock)</button>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <input type="text" id="inp_save_name" placeholder="Nama Rute..." style="width:65%; font-size:10px; padding:3px;">
-                <button onclick="saveCustomRoute()" style="width:30%; background:#00e5ff; color:black; border:none; cursor:pointer; font-weight:bold; font-size:10px;">💾 SAVE</button>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <select id="sel_saved_routes" style="width:65%; font-size:10px; background:#222; color:white; border:1px solid #555;">
-                    <option value="">-- Pilih Simpanan --</option>
-                </select>
-                <div style="width:30%; display:flex; justify-content:space-between;">
-                    <button onclick="loadCustomRoute()" style="width:48%; background:#0078a8; color:white; border:none; cursor:pointer; font-size:10px;">📂</button>
-                    <button onclick="deleteCustomRoute()" style="width:48%; background:#f44336; color:white; border:none; cursor:pointer; font-size:10px;">❌</button>
-                </div>
-            </div>
-             <div style="display:flex; justify-content:space-between; margin-top:5px; border-top:1px dotted #555; padding-top:5px;">
-                <button onclick="exportData()" style="width:48%; background:#333; color:#ccc; border:1px solid #555; cursor:pointer; font-size:10px;">⬇️ EXPORT</button>
-                <button onclick="document.getElementById('file_import').click()" style="width:48%; background:#333; color:#ccc; border:1px solid #555; cursor:pointer; font-size:10px;">⬆️ IMPORT</button>
-                <input type="file" id="file_import" style="display:none;" onchange="importData(this)">
-            </div>
-            <div id="save_status" style="font-size:9px; color:#aaa; margin-top:3px; text-align:right;">System Ready.</div>
-        </div>
-
-        <div style="background-color: rgba(255,255,255,0.05); padding:8px; border-radius:5px; border:1px solid #444; margin-bottom:5px;">
-            <strong style="color:#00e5ff; font-size:10px;">⚙️ MOVING CONFIG</strong>
-            <div style="display: flex; justify-content: space-between; margin-top:5px;">
-                <div style="width:48%">
-                    <label style="font-size:9px; color:#ccc;">Consumption</label>
-                    <div style="display:flex; justify-content:space-between;">
-                         <input type="number" id="inp_faktor" value="51.07" step="0.1" oninput="updateDashboard(); autoSave();" style="width:60%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
-                         <select id="sel_unit" onchange="updateDashboard(); autoSave();" style="width:38%; font-size:8px; background:#333; color:#fff; border:none;"><option value="lnm">L/NM</option><option value="lhr">L/H</option></select>
-                    </div>
-                </div>
-                <div style="width:48%">
-                    <label style="font-size:9px; color:#ccc;">Speed (Knot)</label>
-                    <input type="number" id="inp_speed" value="10.0" step="0.5" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
-                </div>
-            </div>
+        <div id="dashboard_header" style="background-color: #141e30; padding: 10px 15px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #00e5ff;">
+            <div style="color: #00e5ff; font-weight: 700; font-size: 11px; letter-spacing: 1px;">⚙️ CONTROL PANEL</div>
+            <button onclick="toggleDashboard()" id="btn_toggle" style="background:#222; border:1px solid #00e5ff; color:#00e5ff; border-radius:3px; cursor:pointer; font-weight:bold; width:25px; height:20px; line-height:16px;">-</button>
         </div>
         
-        <div style="background-color: rgba(255,165,0,0.1); padding:8px; border-radius:5px; border:1px solid #FFA500; margin-bottom:10px;">
-            <strong style="color:#FFA500; font-size:10px;">⚓ STANDBY / IDLE</strong>
-            <div style="display: flex; justify-content: space-between; margin-top:5px;">
-                <div style="width:48%">
-                    <label style="font-size:9px; color:#ccc;">Hours</label>
-                    <input type="number" id="inp_std_hours" value="0" step="1" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
-                </div>
-                <div style="width:48%">
-                    <label style="font-size:9px; color:#ccc;">L/Hour</label>
-                    <input type="number" id="inp_std_faktor" value="5.0" step="0.1" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
-                </div>
-            </div>
-        </div>
-
-        <div style="background-color: rgba(255,255,255,0.05); padding:8px; border-radius:5px; border:1px solid #444; margin-bottom:10px;">
-            <div style="display: flex; justify-content: space-between;">
-                <div style="width:48%">
-                    <label style="font-size:9px; color:#ffeb3b;">Price (IDR)</label>
-                    <input type="number" id="inp_price" value="23000" step="100" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#ffeb3b; border:1px solid #555; padding:2px; font-weight:bold;">
-                </div>
-                <div style="width:48%">
-                    <label style="font-size:9px; color:#0f0;">Margin (%)</label>
-                    <input type="number" id="inp_margin" value="10.0" step="1.0" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#0f0; border:1px solid #555; padding:2px; font-weight:bold;">
-                </div>
-            </div>
-        </div>
-
-        <div style="background-color: rgba(0,0,0,0.3); padding:8px; border-radius:5px; border:1px solid #444; margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong style="color:#00e5ff; font-size:10px;">☁️ LIVE DATA</strong>
-                <div style="display:flex; align-items:center; gap:5px;">
-                    <span id="live_status" style="font-size:9px; color:#aaa;">● Check...</span>
-                    <button onclick="toggleMedia('traffic')" title="Show Ship Traffic" style="background:#FFA500; border:none; color:#000; border-radius:3px; cursor:pointer; font-size:9px; padding:2px 6px; font-weight:bold;">🚢 TRAFFIC</button>
-                    <button onclick="toggleMedia('windy')" title="Show Windy Radar" style="background:#f44336; border:none; color:#fff; border-radius:3px; cursor:pointer; font-size:9px; padding:2px 6px; font-weight:bold;">🌪️ RADAR</button>
-                    <button onclick="forceRefreshWeather()" title="Refresh" style="background:transparent; border:1px solid #555; color:#fff; border-radius:3px; cursor:pointer; font-size:10px; padding:0px 4px;">↻</button>
-                </div>
-            </div>
+        <div id="dashboard_content" style="padding: 15px; max-height: 70vh; overflow-y: auto;">
             
-            <div style="display: flex; justify-content: space-between; margin-top:5px; font-size:11px;">
-                <div style="text-align:center; width:30%;">
-                    <div style="color:#aaa;">Wind Spd</div>
-                    <div id="val_wind" style="font-weight:bold;">-- kn</div>
+            <div id="media_container" style="display:none; width:100%; height:250px; margin-bottom:10px; border:1px solid #f44336; border-radius:5px; overflow:hidden; position:relative;">
+                <div style="position:absolute; top:5px; right:5px; z-index:1000;">
+                     <button onclick="window.open(document.getElementById('media_iframe').src, '_blank')" style="background:black; color:white; border:none; font-size:9px; cursor:pointer;">↗ Open New Tab</button>
                 </div>
-                <div style="text-align:center; width:30%;">
-                    <div style="color:#aaa;">Direction</div>
-                    <div style="display:flex; justify-content:center; align-items:center;">
-                        <span id="val_wind_dir_txt" style="font-weight:bold;">--°</span>
-                        <div id="arrow_wind" style="margin-left:5px; transform: rotate(0deg); display:inline-block;">⬆️</div>
+                <iframe id="media_iframe" width="100%" height="100%" frameborder="0" style="border:0;"></iframe>
+            </div>
+
+            <div style="background-color: rgba(0,100,255,0.1); padding:8px; border-radius:5px; border:1px solid #00e5ff; margin-bottom:10px;">
+                <strong style="color:#00e5ff; font-size:10px;">🔍 CARI POSISI KAPAL</strong>
+                <div style="display:flex; justify-content:space-between; margin-top:5px;">
+                    <input type="text" id="inp_ship_name" placeholder="Nama Kapal (Ex: NR SATU)" style="width:70%; font-size:10px; padding:3px; background:#111; color:white; border:1px solid #555;">
+                    <button onclick="searchShip()" style="width:25%; background:#00e5ff; color:black; border:none; cursor:pointer; font-weight:bold; font-size:10px;">CARI ↗</button>
+                </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 10px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <button onclick="toggleLock()" id="btn_lock" style="width:100%; background:#d32f2f; color:white; border:none; cursor:pointer; font-weight:bold; font-size:10px; padding:4px;">🔒 EDIT MODE: LOCKED (Click to Unlock)</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <input type="text" id="inp_save_name" placeholder="Nama Rute..." style="width:65%; font-size:10px; padding:3px;">
+                    <button onclick="saveCustomRoute()" style="width:30%; background:#00e5ff; color:black; border:none; cursor:pointer; font-weight:bold; font-size:10px;">💾 SAVE</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <select id="sel_saved_routes" style="width:65%; font-size:10px; background:#222; color:white; border:1px solid #555;">
+                        <option value="">-- Pilih Simpanan --</option>
+                    </select>
+                    <div style="width:30%; display:flex; justify-content:space-between;">
+                        <button onclick="loadCustomRoute()" style="width:48%; background:#0078a8; color:white; border:none; cursor:pointer; font-size:10px;">📂</button>
+                        <button onclick="deleteCustomRoute()" style="width:48%; background:#f44336; color:white; border:none; cursor:pointer; font-size:10px;">❌</button>
                     </div>
                 </div>
-                <div style="text-align:center; width:30%;">
-                    <div style="color:#aaa;">Wave</div>
-                    <div id="val_wave" style="font-weight:bold;">-- m</div>
+                 <div style="display:flex; justify-content:space-between; margin-top:5px; border-top:1px dotted #555; padding-top:5px;">
+                    <button onclick="exportData()" style="width:48%; background:#333; color:#ccc; border:1px solid #555; cursor:pointer; font-size:10px;">⬇️ EXPORT</button>
+                    <button onclick="document.getElementById('file_import').click()" style="width:48%; background:#333; color:#ccc; border:1px solid #555; cursor:pointer; font-size:10px;">⬆️ IMPORT</button>
+                    <input type="file" id="file_import" style="display:none;" onchange="importData(this)">
+                </div>
+                <div id="save_status" style="font-size:9px; color:#aaa; margin-top:3px; text-align:right;">System Ready.</div>
+            </div>
+
+            <div style="background-color: rgba(255,255,255,0.05); padding:8px; border-radius:5px; border:1px solid #444; margin-bottom:5px;">
+                <strong style="color:#00e5ff; font-size:10px;">⚙️ MOVING CONFIG</strong>
+                <div style="display: flex; justify-content: space-between; margin-top:5px;">
+                    <div style="width:48%">
+                        <label style="font-size:9px; color:#ccc;">Consumption</label>
+                        <div style="display:flex; justify-content:space-between;">
+                             <input type="number" id="inp_faktor" value="51.07" step="0.1" oninput="updateDashboard(); autoSave();" style="width:60%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
+                             <select id="sel_unit" onchange="updateDashboard(); autoSave();" style="width:38%; font-size:8px; background:#333; color:#fff; border:none;"><option value="lnm">L/NM</option><option value="lhr">L/H</option></select>
+                        </div>
+                    </div>
+                    <div style="width:48%">
+                        <label style="font-size:9px; color:#ccc;">Speed (Knot)</label>
+                        <input type="number" id="inp_speed" value="10.0" step="0.5" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div style="padding-bottom:10px; border-bottom:1px solid #444;">
-            <div style="margin-bottom:8px;">
-                <label style="font-size:10px; color:#ccc;">FROM:</label>
-                <select id="sel_start" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;">
-                    <option value="nr" selected>FSRU NR 1</option>
-                    <option value="inggom">Dermaga Inggom</option>
-                    <option value="priok">Port of Priok</option>
-                    <option value="lampung">FSRU Lampung</option>
-                    <option value="jsp">FSRU Jawa Satu</option>
-                    <option value="custom">-- Custom --</option>
-                </select>
-                <div id="box_start_input" style="display:none; margin-top:4px; padding:4px; background:rgba(255,255,255,0.1); border-radius:3px;">
-                    <input type="text" id="inp_start_txt" placeholder="Lat, Long" style="width:95%; font-size:10px; background:#111; color:#fff; border:1px solid #555; padding:2px;">
-                    <button onclick="applyCoordinates('start')" style="width:100%; margin-top:2px; font-size:9px; cursor:pointer; background:#0078A8; color:white; border:none;">GO TO COORD</button>
-                </div>
-            </div>
-            <div>
-                <label style="font-size:10px; color:#ccc;">TO:</label>
-                <select id="sel_end" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;">
-                    <option value="jsp" selected>FSRU Jawa Satu</option>
-                    <option value="inggom">Dermaga Inggom</option>
-                    <option value="priok">Port of Priok</option>
-                    <option value="nr">FSRU NR 1</option>
-                    <option value="lampung">FSRU Lampung</option>
-                    <option value="custom">-- Custom --</option>
-                </select>
-                <div id="box_end_input" style="display:none; margin-top:4px; padding:4px; background:rgba(255,255,255,0.1); border-radius:3px;">
-                    <input type="text" id="inp_end_txt" placeholder="Lat, Long" style="width:95%; font-size:10px; background:#111; color:#fff; border:1px solid #555; padding:2px;">
-                    <button onclick="applyCoordinates('end')" style="width:100%; margin-top:2px; font-size:9px; cursor:pointer; background:#0078A8; color:white; border:none;">GO TO COORD</button>
-                </div>
-            </div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; margin-top:8px;">
-            <button onclick="performUndo()" title="Ctrl+Z" style="width:48%; cursor:pointer; padding:6px; background:#fdd835; color:#000; border:1px solid #fbc02d; border-radius:3px; font-size:10px; font-weight:bold;">↩️ UNDO</button>
-            <button onclick="performRedo()" title="Ctrl+Shift+Z" style="width:48%; cursor:pointer; padding:6px; background:#66bb6a; color:#fff; border:1px solid #43a047; border-radius:3px; font-size:10px; font-weight:bold;">REDO ↪️</button>
-        </div>
-
-        <table style="width:100%; font-size:11px; margin-top:10px; border-collapse: collapse; color: #eee;">
-            <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Jarak One Way</td><td id="val_dist_ow" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
-            <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Jarak Total (PP)</td><td id="val_dist_pp" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
-            <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Base Speed</td><td style="padding:5px; text-align:right;"><input type="number" id="inp_speed_disp" value="10.0" disabled style="width:40px; background:transparent; color:#ccc; border:none; text-align:right;"> kn</td></tr>
-            <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Actual Speed</td><td id="val_actual_speed" style="padding:5px; text-align:right; font-weight:bold; color:#00e5ff;">...</td></tr>
-            <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Durasi One Way</td><td id="val_dur_ow" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
-            <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Durasi Total (PP)</td><td id="val_dur_pp" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
             
-            <tr style="border-bottom:1px solid #444;">
-                <td style="padding:5px; color:#FFA500;">BBM Standby</td>
-                <td id="val_bbm_std" style="padding:5px; text-align:right; font-weight:bold; color: #FFA500;">...</td>
-            </tr>
-            <tr style="border-bottom:1px solid #444;">
-                <td style="padding:5px; color:#ffeb3b;">TOTAL BBM</td>
-                <td id="val_bbm" style="padding:5px; text-align:right; font-weight:bold; color: #ffeb3b; font-size:13px;">...</td>
-            </tr>
-            
-            <tr style="background-color: rgba(255, 255, 255, 0.05);"><td style="padding:8px; color:#ccc;">Cost (Real)</td><td id="val_cost_real" style="padding:8px; text-align:right; font-weight:bold; color:#ccc; font-size:12px;">...</td></tr>
-            <tr style="background-color: rgba(0, 229, 255, 0.1); border-top: 1px solid #00e5ff;"><td style="padding:8px; color:#00e5ff;"><b>COST (+MARGIN)</b></td><td id="val_cost_margin" style="padding:8px; text-align:right; font-weight:bold; color:#00e5ff; font-size:14px;">...</td></tr>
-        </table>
-        <div style="font-size:9px; color:#666; text-align:center; margin-top:5px;">Shortcut: Ctrl+Z (Undo) | Ctrl+Shift+Z (Redo)</div>
+            <div style="background-color: rgba(255,165,0,0.1); padding:8px; border-radius:5px; border:1px solid #FFA500; margin-bottom:10px;">
+                <strong style="color:#FFA500; font-size:10px;">⚓ STANDBY / IDLE</strong>
+                <div style="display: flex; justify-content: space-between; margin-top:5px;">
+                    <div style="width:48%">
+                        <label style="font-size:9px; color:#ccc;">Hours</label>
+                        <input type="number" id="inp_std_hours" value="0" step="1" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
+                    </div>
+                    <div style="width:48%">
+                        <label style="font-size:9px; color:#ccc;">L/Hour</label>
+                        <input type="number" id="inp_std_faktor" value="5.0" step="0.1" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#fff; border:1px solid #555; padding:2px; font-weight:bold;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: rgba(255,255,255,0.05); padding:8px; border-radius:5px; border:1px solid #444; margin-bottom:10px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="width:48%">
+                        <label style="font-size:9px; color:#ffeb3b;">Price (IDR)</label>
+                        <input type="number" id="inp_price" value="23000" step="100" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#ffeb3b; border:1px solid #555; padding:2px; font-weight:bold;">
+                    </div>
+                    <div style="width:48%">
+                        <label style="font-size:9px; color:#0f0;">Margin (%)</label>
+                        <input type="number" id="inp_margin" value="10.0" step="1.0" oninput="updateDashboard(); autoSave();" style="width:95%; background:#111; color:#0f0; border:1px solid #555; padding:2px; font-weight:bold;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="background-color: rgba(0,0,0,0.3); padding:8px; border-radius:5px; border:1px solid #444; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="color:#00e5ff; font-size:10px;">☁️ LIVE DATA</strong>
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <span id="live_status" style="font-size:9px; color:#aaa;">● Check...</span>
+                        <button onclick="toggleMedia('traffic')" title="Show Ship Traffic" style="background:#FFA500; border:none; color:#000; border-radius:3px; cursor:pointer; font-size:9px; padding:2px 6px; font-weight:bold;">🚢 TRAFFIC</button>
+                        <button onclick="toggleMedia('windy')" title="Show Windy Radar" style="background:#f44336; border:none; color:#fff; border-radius:3px; cursor:pointer; font-size:9px; padding:2px 6px; font-weight:bold;">🌪️ RADAR</button>
+                        <button onclick="forceRefreshWeather()" title="Refresh" style="background:transparent; border:1px solid #555; color:#fff; border-radius:3px; cursor:pointer; font-size:10px; padding:0px 4px;">↻</button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; margin-top:5px; font-size:11px;">
+                    <div style="text-align:center; width:30%;">
+                        <div style="color:#aaa;">Wind Spd</div>
+                        <div id="val_wind" style="font-weight:bold;">-- kn</div>
+                    </div>
+                    <div style="text-align:center; width:30%;">
+                        <div style="color:#aaa;">Direction</div>
+                        <div style="display:flex; justify-content:center; align-items:center;">
+                            <span id="val_wind_dir_txt" style="font-weight:bold;">--°</span>
+                            <div id="arrow_wind" style="margin-left:5px; transform: rotate(0deg); display:inline-block;">⬆️</div>
+                        </div>
+                    </div>
+                    <div style="text-align:center; width:30%;">
+                        <div style="color:#aaa;">Wave</div>
+                        <div id="val_wave" style="font-weight:bold;">-- m</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding-bottom:10px; border-bottom:1px solid #444;">
+                <div style="margin-bottom:8px;">
+                    <label style="font-size:10px; color:#ccc;">FROM:</label>
+                    <select id="sel_start" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;">
+                        <option value="nr" selected>FSRU NR 1</option>
+                        <option value="inggom">Dermaga Inggom</option>
+                        <option value="priok">Port of Priok</option>
+                        <option value="lampung">FSRU Lampung</option>
+                        <option value="jsp">FSRU Jawa Satu</option>
+                        <option value="custom">-- Custom --</option>
+                    </select>
+                    <div id="box_start_input" style="display:none; margin-top:4px; padding:4px; background:rgba(255,255,255,0.1); border-radius:3px;">
+                        <input type="text" id="inp_start_txt" placeholder="Lat, Long" style="width:95%; font-size:10px; background:#111; color:#fff; border:1px solid #555; padding:2px;">
+                        <button onclick="applyCoordinates('start')" style="width:100%; margin-top:2px; font-size:9px; cursor:pointer; background:#0078A8; color:white; border:none;">GO TO COORD</button>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-size:10px; color:#ccc;">TO:</label>
+                    <select id="sel_end" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;">
+                        <option value="jsp" selected>FSRU Jawa Satu</option>
+                        <option value="inggom">Dermaga Inggom</option>
+                        <option value="priok">Port of Priok</option>
+                        <option value="nr">FSRU NR 1</option>
+                        <option value="lampung">FSRU Lampung</option>
+                        <option value="custom">-- Custom --</option>
+                    </select>
+                    <div id="box_end_input" style="display:none; margin-top:4px; padding:4px; background:rgba(255,255,255,0.1); border-radius:3px;">
+                        <input type="text" id="inp_end_txt" placeholder="Lat, Long" style="width:95%; font-size:10px; background:#111; color:#fff; border:1px solid #555; padding:2px;">
+                        <button onclick="applyCoordinates('end')" style="width:100%; margin-top:2px; font-size:9px; cursor:pointer; background:#0078A8; color:white; border:none;">GO TO COORD</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top:8px;">
+                <button onclick="performUndo()" title="Ctrl+Z" style="width:48%; cursor:pointer; padding:6px; background:#fdd835; color:#000; border:1px solid #fbc02d; border-radius:3px; font-size:10px; font-weight:bold;">↩️ UNDO</button>
+                <button onclick="performRedo()" title="Ctrl+Shift+Z" style="width:48%; cursor:pointer; padding:6px; background:#66bb6a; color:#fff; border:1px solid #43a047; border-radius:3px; font-size:10px; font-weight:bold;">REDO ↪️</button>
+            </div>
+
+            <table style="width:100%; font-size:11px; margin-top:10px; border-collapse: collapse; color: #eee;">
+                <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Jarak One Way</td><td id="val_dist_ow" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
+                <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Jarak Total (PP)</td><td id="val_dist_pp" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
+                <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Base Speed</td><td style="padding:5px; text-align:right;"><input type="number" id="inp_speed_disp" value="10.0" disabled style="width:40px; background:transparent; color:#ccc; border:none; text-align:right;"> kn</td></tr>
+                <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Actual Speed</td><td id="val_actual_speed" style="padding:5px; text-align:right; font-weight:bold; color:#00e5ff;">...</td></tr>
+                <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Durasi One Way</td><td id="val_dur_ow" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
+                <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Durasi Total (PP)</td><td id="val_dur_pp" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
+                
+                <tr style="border-bottom:1px solid #444;">
+                    <td style="padding:5px; color:#FFA500;">BBM Standby</td>
+                    <td id="val_bbm_std" style="padding:5px; text-align:right; font-weight:bold; color: #FFA500;">...</td>
+                </tr>
+                <tr style="border-bottom:1px solid #444;">
+                    <td style="padding:5px; color:#ffeb3b;">TOTAL BBM</td>
+                    <td id="val_bbm" style="padding:5px; text-align:right; font-weight:bold; color: #ffeb3b; font-size:13px;">...</td>
+                </tr>
+                
+                <tr style="background-color: rgba(255, 255, 255, 0.05);"><td style="padding:8px; color:#ccc;">Cost (Real)</td><td id="val_cost_real" style="padding:8px; text-align:right; font-weight:bold; color:#ccc; font-size:12px;">...</td></tr>
+                <tr style="background-color: rgba(0, 229, 255, 0.1); border-top: 1px solid #00e5ff;"><td style="padding:8px; color:#00e5ff;"><b>COST (+MARGIN)</b></td><td id="val_cost_margin" style="padding:8px; text-align:right; font-weight:bold; color:#00e5ff; font-size:14px;">...</td></tr>
+            </table>
+            <div style="font-size:9px; color:#666; text-align:center; margin-top:5px;">Shortcut: Ctrl+Z (Undo) | Ctrl+Shift+Z (Redo)</div>
+        </div>
     </div>
-</div>
     
+    <div class="folium-map" id="map_64192451556e7fad9e763d41da0e6805" ></div>
+    
+</body>
+
 <script>
     // Global Vars
     window.updateDashboard = null; window.changeRouteSmart = null;
@@ -275,7 +267,7 @@
     window.toggleLock = null;
 
     var isLocked = true;
-    var STORAGE_KEY = 'nr_optivoyage_autosave_v1'; // Update nama key storage agar fresh
+    var STORAGE_KEY = 'nr_optivoyage_autosave_v1'; 
 
     function makeDraggable(elmnt) {
         var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -393,7 +385,6 @@
             a.href = url;
             a.download = 'nr_optivoyage_backup.json';
             a.click();
-            a.click();
             URL.revokeObjectURL(url);
         }
 
@@ -504,7 +495,7 @@
                         document.getElementById('sel_unit').value = parsed.settings.unit;
                         if(parsed.settings.price) document.getElementById('inp_price').value = parsed.settings.price;
                         if(parsed.settings.margin) document.getElementById('inp_margin').value = parsed.settings.margin;
-                        if(parsed.settings.std_hours) document.getElementById('inp_std_hours').value = parsed.settings.std_hours;
+                        if(parsed.settings.std_hours) document.getElementById('parsed.settings.std_hours');
                         if(parsed.settings.std_faktor) document.getElementById('inp_std_faktor').value = parsed.settings.std_faktor;
                     }
                     document.getElementById('sel_start').value = 'custom';
@@ -645,7 +636,6 @@
                 saveState(); 
                 document.getElementById('sel_start').value = 'custom';
                 document.getElementById('sel_end').value = 'custom';
-                toggleInputBox('start', true); toggleInputBox('end', true);
             });
             m.on('dragend', function() { window.updateDashboard(); autoSave(); }); 
             m.on('contextmenu', function(e) {
@@ -688,10 +678,8 @@
             return { path: latlngs, dist: dist_total };
         }
 
-        // --- SAFE UPDATE FUNCTION (INSTANT CALC + ASYNC WEATHER) ---
         window.updateDashboard = async function() {
             try {
-                // 1. Get Inputs (Safe)
                 var faktor = parseFloat(document.getElementById('inp_faktor').value) || 51.07;
                 var speed = parseFloat(document.getElementById('inp_speed').value) || 10;
                 var unit = document.getElementById('sel_unit').value;
@@ -700,7 +688,6 @@
                 var stdHours = parseFloat(document.getElementById('inp_std_hours').value) || 0;
                 var stdFaktor = parseFloat(document.getElementById('inp_std_faktor').value) || 0;
 
-                // Sync base speed
                 var disp = document.getElementById('inp_speed_disp');
                 if(disp) disp.value = speed;
 
@@ -709,10 +696,8 @@
                 var distOW = res.dist;
                 var distPP = res.dist * 2;
                 
-                // 2. Initial Calculation (OFFLINE ASSUMPTION)
                 var actualSpeed = speed; 
 
-                // 3. Try Fetch Weather (NON-BLOCKING)
                 if(markersBlue.length > 0) {
                     var startPos = markersBlue[0].getLatLng();
                     try {
@@ -722,7 +707,6 @@
                     }
                 }
                 
-                // 4. Final Calculation
                 var durasiOW = distOW / actualSpeed;
                 var durasiPP = distPP / actualSpeed;
                 
@@ -733,7 +717,6 @@
                 var costReal = bbmTotal * price;
                 var costMargin = costReal * (1 + margin/100);
 
-                // 5. Update DOM
                 document.getElementById('val_actual_speed').innerHTML = actualSpeed.toFixed(1) + " kn";
                 document.getElementById('val_dur_ow').innerHTML = durasiOW.toFixed(1) + " h";
                 document.getElementById('val_dur_pp').innerHTML = durasiPP.toFixed(1) + " h";
@@ -745,8 +728,6 @@
                 document.getElementById('val_cost_real').innerHTML = "Rp " + Math.round(costReal).toLocaleString('id-ID');
                 document.getElementById('val_cost_margin').innerHTML = "Rp " + Math.round(costMargin).toLocaleString('id-ID');
 
-                if(document.getElementById('sel_start').value === 'custom') syncInputText('start');
-                if(document.getElementById('sel_end').value === 'custom') syncInputText('end');
             } catch(e) {
                 console.log("Calculation Error: " + e.message);
             }
@@ -794,434 +775,60 @@
         });
     };
 </script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
-    
-            <div class="folium-map" id="map_64192451556e7fad9e763d41da0e6805" ></div>
-        
-    
-            <img id="float_image_63ba0e49fde4c6a2f34a073bcfe94144" alt="float_image"
-                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAbFBMVEX///8AI5L/78D/9+H/9+L/89//893/8NT/7sD/7L//7L7/9uD/9uH/8Nf/8Nr/677/673/6rv/6rr/9N//8dn/8Nb/6rn/6rj/9N7/8df/57b/57X/5bP/8tf/5rL/5rH/5LD/5bD/467/46//4q2Ty/qPAAAIQUlEQVR4nO2daXeiOhCGGXbDvi+IuNSp1tr//8O+TCAgS0hCgOQ853TonI8JyczLpKq6CoX2F1Wj0Ww2m63WcrlcrTfbf1Wj/rBcrTfrzWazzT/o9/uHw+F0Oj8fDof9fv9P/2K13Gy3u91uv9/v9/vdbrvdrJfL/1Y16vf74+l8eX29vLycTsf9fv/v/mK12u72h+P58vryfD6fD8f9bre12q/6/fF8u72/397ebs/n4/7f/cVqtTscz9fb+/v72/PpeDjsVuvl3/7JcDzfPu7v7x8ft+fz8T/8xWq9P56vt4/7+/vH7fl42K/W/7Vq1O+P5/vH/f3j4/Z8PPyHv1itD8fz7eP+/vFxe764V0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNetWkV0161aRXTXrVpFdNujVqOBwOh8PhcPgHNRwOh8PhcDgcDoc/V+P5fH19fX19PZ/Px/2/q0bz5Xw+n8/n8/lyOp72u3/R9HI+n8/n8/l8OR33u93War9qPp/P5/P5fD5fTseDddVqOp/P5/P5fD5fTsf9ar382z8Zz+fz+Xw+ny+nw2G3Wv/HqsnlfD6fz+fz5XQ47Fbr/1o1ms/n8/l8Pp8vp+Nht/q31Xg+n8/n8/l8Ph33u93f/cVkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMptV6s9lstpvNZrPZbDabrWaT9ZPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMptV6s9lstpvNZrPZbDabrWaT9ZPJZDKZTCaTyWQymUwmk8lkMplMpv9ajebL+Xw+n8/ny+l42K3W/7Vq1O+P59vt/f329nZ7Ph/3/+4vVqvd4Xi+3t7f39+eT8fDYbdaL//2T4bj+fZxf3//+Lg9n4//4S9W6/3xfL193N/fP27Px8N+tf6vVaN+fzzfP+7vHx+35+PhP/zFajUAAAAASUVORK5CYII="
-                 style="z-index: 999999">
-            </img>
-            
-    
-            
-            <style>
-                #export {
-                    position: absolute;
-                    top: 5px;
-                    right: 10px;
-                    z-index: 999;
-                    background: white;
-                    color: black;
-                    padding: 6px;
-                    border-radius: 4px;
-                    font-family: 'Helvetica Neue';
-                    cursor: pointer;
-                    font-size: 12px;
-                    text-decoration: none;
-                    top: 90px;
-                }
-            </style>
-            <a href='#' id='export'>Export</a>
-            
-        
-</body>
+
 <script>
-    
-    
-            var map_64192451556e7fad9e763d41da0e6805 = L.map(
-                "map_64192451556e7fad9e763d41da0e6805",
-                {
-                    center: [-5.974444, 106.799167],
-                    crs: L.CRS.EPSG3857,
-                    ...{
-  "zoom": 8,
-  "zoomControl": true,
-  "preferCanvas": false,
-  "doubleClickZoom": false,
-}
+    var map_64192451556e7fad9e763d41da0e6805 = L.map(
+        "map_64192451556e7fad9e763d41da0e6805",
+        {
+            center: [-5.974444, 106.799167],
+            crs: L.CRS.EPSG3857,
+            ...{"zoom": 8, "zoomControl": true, "preferCanvas": false, "doubleClickZoom": false}
+        }
+    );
 
-                }
-            );
+    var tile_layer_17e9de28213d403105f54974fc1b48ab = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        {"minZoom": 0, "maxZoom": 20, "noWrap": false, "subdomains": "abcd"}
+    ).addTo(map_64192451556e7fad9e763d41da0e6805);
 
-            
+    var tile_layer_63218de02d7c1a737518aa8db7513f95 = L.tileLayer(
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {"minZoom": 0, "maxZoom": 19, "noWrap": false}
+    ).addTo(map_64192451556e7fad9e763d41da0e6805);
 
-        
-    
-            var tile_layer_17e9de28213d403105f54974fc1b48ab = L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-                {
-  "minZoom": 0,
-  "maxZoom": 20,
-  "maxNativeZoom": 20,
-  "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
-  "subdomains": "abcd",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
+    var tile_layer_6a4b7ac9edee843e79e8f6b226351416 = L.tileLayer("https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=8b5c27d8dd47e3d625e9abd4de02e4db", {"opacity": 1});
+    var tile_layer_74e434e49188cbb59944bc3c93d71228 = L.tileLayer("https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=8b5c27d8dd47e3d625e9abd4de02e4db", {"opacity": 1});
+    var tile_layer_8e97be6e78cae9d69ef097ac008a9b7f = L.tileLayer("https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=8b5c27d8dd47e3d625e9abd4de02e4db", {"opacity": 1});
 
-            );
-        
+    var feature_group_1ee473beeb5d100fccdcc0a7831f94cb = L.featureGroup().addTo(map_64192451556e7fad9e763d41da0e6805);
     
-            tile_layer_17e9de28213d403105f54974fc1b48ab.addTo(map_64192451556e7fad9e763d41da0e6805);
-        
-    
-            var tile_layer_63218de02d7c1a737518aa8db7513f95 = L.tileLayer(
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {
-  "minZoom": 0,
-  "maxZoom": 19,
-  "maxNativeZoom": 19,
-  "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
+    var marker_b556488d758c4b3ac86d6277fd9b9774 = L.marker([-5.974444, 106.799167]).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
+    marker_b556488d758c4b3ac86d6277fd9b9774.bindPopup("<b>FSRU NR 1</b>").setIcon(L.AwesomeMarkers.icon({icon: "anchor", prefix: "fa", markerColor: "gray"}));
 
-            );
-        
-    
-            tile_layer_63218de02d7c1a737518aa8db7513f95.addTo(map_64192451556e7fad9e763d41da0e6805);
-        
-    
-            var tile_layer_6a4b7ac9edee843e79e8f6b226351416 = L.tileLayer(
-                "https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=8b5c27d8dd47e3d625e9abd4de02e4db",
-                {
-  "minZoom": 0,
-  "maxZoom": 18,
-  "maxNativeZoom": 18,
-  "noWrap": false,
-  "attribution": "OWM",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
+    var marker_add4c7542cbd4807837e7051760d1222 = L.marker([-6.163611, 107.74]).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
+    marker_add4c7542cbd4807837e7051760d1222.bindPopup("<b>FSRU Jawa Satu</b>").setIcon(L.AwesomeMarkers.icon({icon: "anchor", prefix: "fa", markerColor: "gray"}));
 
-            );
-        
-    
-            var tile_layer_74e434e49188cbb59944bc3c93d71228 = L.tileLayer(
-                "https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=8b5c27d8dd47e3d625e9abd4de02e4db",
-                {
-  "minZoom": 0,
-  "maxZoom": 18,
-  "maxNativeZoom": 18,
-  "noWrap": false,
-  "attribution": "OWM",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
+    var marker_600f6d164f8b3843454ca64f8d44d3e8 = L.marker([-5.441667, 105.941667]).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
+    marker_600f6d164f8b3843454ca64f8d44d3e8.bindPopup("<b>FSRU Lampung</b>").setIcon(L.AwesomeMarkers.icon({icon: "anchor", prefix: "fa", markerColor: "gray"}));
 
-            );
-        
-    
-            var tile_layer_8e97be6e78cae9d69ef097ac008a9b7f = L.tileLayer(
-                "https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=8b5c27d8dd47e3d625e9abd4de02e4db",
-                {
-  "minZoom": 0,
-  "maxZoom": 18,
-  "maxNativeZoom": 18,
-  "noWrap": false,
-  "attribution": "OWM",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
+    var marker_e3b838ca607522cc85d52aa7bd9eb3a1 = L.marker([-6.104583, 106.882506]).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
+    marker_e3b838ca607522cc85d52aa7bd9eb3a1.bindPopup("<b>Port of Priok</b>").setIcon(L.AwesomeMarkers.icon({icon: "anchor", prefix: "fa", markerColor: "darkred"}));
 
-            );
-        
-    
-            var feature_group_1ee473beeb5d100fccdcc0a7831f94cb = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_b556488d758c4b3ac86d6277fd9b9774 = L.marker(
-                [-5.974444, 106.799167],
-                {
-}
-            ).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
-        
-    
-            var icon_cb39ae020a54f6e32e0f760f311caf29 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "gray",
-  "iconColor": "white",
-  "icon": "anchor",
-  "prefix": "fa",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_9720e4b4c1deb711e0c8dcc540b00a77 = L.popup({
-  "maxWidth": "100%",
-});
+    var marker_5416f4f8e4f651d0757a17cc2c04f3b8 = L.marker([-6.110769, 106.869766]).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
+    marker_5416f4f8e4f651d0757a17cc2c04f3b8.bindPopup("<b>Dermaga Inggom</b>").setIcon(L.AwesomeMarkers.icon({icon: "anchor", prefix: "fa", markerColor: "orange"}));
 
-        
-            
-                var html_50494c897cf3044282e87a5f2b006aab = $(`<div id="html_50494c897cf3044282e87a5f2b006aab" style="width: 100.0%; height: 100.0%;"><b>FSRU NR 1</b></div>`)[0];
-                popup_9720e4b4c1deb711e0c8dcc540b00a77.setContent(html_50494c897cf3044282e87a5f2b006aab);
-            
-        
+    var feature_group_3ff01ff3702e82ac51bbf785d8a44562 = L.featureGroup().addTo(map_64192451556e7fad9e763d41da0e6805);
+    var poly_line_5cea235f0aa57affb900b3e5c1a3a59b = L.polyline([[-5.974444, 106.799167], [-5.88, 106.85], [-5.85, 107.1], [-6.163611, 107.74]], {"color": "#00e5ff", "weight": 4}).addTo(feature_group_3ff01ff3702e82ac51bbf785d8a44562);
 
-        marker_b556488d758c4b3ac86d6277fd9b9774.bindPopup(popup_9720e4b4c1deb711e0c8dcc540b00a77)
-        ;
-
-        
-    
-    
-                marker_b556488d758c4b3ac86d6277fd9b9774.setIcon(icon_cb39ae020a54f6e32e0f760f311caf29);
-            
-    
-            var marker_add4c7542cbd4807837e7051760d1222 = L.marker(
-                [-6.163611, 107.74],
-                {
-}
-            ).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
-        
-    
-            var icon_4e918fd2e7404c59288d1b5d52730fd0 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "gray",
-  "iconColor": "white",
-  "icon": "anchor",
-  "prefix": "fa",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_b846aaaf883e841c061b9d4988280e2e = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_7443ee3d47fd9763a0c097c0c4d46499 = $(`<div id="html_7443ee3d47fd9763a0c097c0c4d46499" style="width: 100.0%; height: 100.0%;"><b>FSRU Jawa Satu</b></div>`)[0];
-                popup_b846aaaf883e841c061b9d4988280e2e.setContent(html_7443ee3d47fd9763a0c097c0c4d46499);
-            
-        
-
-        marker_add4c7542cbd4807837e7051760d1222.bindPopup(popup_b846aaaf883e841c061b9d4988280e2e)
-        ;
-
-        
-    
-    
-                marker_add4c7542cbd4807837e7051760d1222.setIcon(icon_4e918fd2e7404c59288d1b5d52730fd0);
-            
-    
-            var marker_600f6d164f8b3843454ca64f8d44d3e8 = L.marker(
-                [-5.441667, 105.941667],
-                {
-}
-            ).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
-        
-    
-            var icon_ff17127d507e3ea07c965bf2b27b0511 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "gray",
-  "iconColor": "white",
-  "icon": "anchor",
-  "prefix": "fa",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_d5318c889c13a29d43ce01ef9f334cf9 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_4368ce556c356c40411b4b33b613a73b = $(`<div id="html_4368ce556c356c40411b4b33b613a73b" style="width: 100.0%; height: 100.0%;"><b>FSRU Lampung</b></div>`)[0];
-                popup_d5318c889c13a29d43ce01ef9f334cf9.setContent(html_4368ce556c356c40411b4b33b613a73b);
-            
-        
-
-        marker_600f6d164f8b3843454ca64f8d44d3e8.bindPopup(popup_d5318c889c13a29d43ce01ef9f334cf9)
-        ;
-
-        
-    
-    
-                marker_600f6d164f8b3843454ca64f8d44d3e8.setIcon(icon_ff17127d507e3ea07c965bf2b27b0511);
-            
-    
-            var marker_e3b838ca607522cc85d52aa7bd9eb3a1 = L.marker(
-                [-6.104583, 106.882506],
-                {
-}
-            ).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
-        
-    
-            var icon_036bebc697d0eec3c22af2ce064901f2 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "darkred",
-  "iconColor": "white",
-  "icon": "anchor",
-  "prefix": "fa",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_6c9f1e61027c59f4eed2accbf33fa654 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_8b9da03c36e228df21cb0dd4ec45cbc3 = $(`<div id="html_8b9da03c36e228df21cb0dd4ec45cbc3" style="width: 100.0%; height: 100.0%;"><b>Port of Priok</b></div>`)[0];
-                popup_6c9f1e61027c59f4eed2accbf33fa654.setContent(html_8b9da03c36e228df21cb0dd4ec45cbc3);
-            
-        
-
-        marker_e3b838ca607522cc85d52aa7bd9eb3a1.bindPopup(popup_6c9f1e61027c59f4eed2accbf33fa654)
-        ;
-
-        
-    
-    
-                marker_e3b838ca607522cc85d52aa7bd9eb3a1.setIcon(icon_036bebc697d0eec3c22af2ce064901f2);
-            
-    
-            var marker_5416f4f8e4f651d0757a17cc2c04f3b8 = L.marker(
-                [-6.110769, 106.869766],
-                {
-}
-            ).addTo(feature_group_1ee473beeb5d100fccdcc0a7831f94cb);
-        
-    
-            var icon_cf356e117bf4158489cece313cb99eb9 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "orange",
-  "iconColor": "white",
-  "icon": "anchor",
-  "prefix": "fa",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_c9e6d0b197d9b121f33cfc573af39311 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_be56cd5371a1be10908b35701150a873 = $(`<div id="html_be56cd5371a1be10908b35701150a873" style="width: 100.0%; height: 100.0%;"><b>Dermaga Inggom</b></div>`)[0];
-                popup_c9e6d0b197d9b121f33cfc573af39311.setContent(html_be56cd5371a1be10908b35701150a873);
-            
-        
-
-        marker_5416f4f8e4f651d0757a17cc2c04f3b8.bindPopup(popup_c9e6d0b197d9b121f33cfc573af39311)
-        ;
-
-        
-    
-    
-                marker_5416f4f8e4f651d0757a17cc2c04f3b8.setIcon(icon_cf356e117bf4158489cece313cb99eb9);
-            
-    
-            feature_group_1ee473beeb5d100fccdcc0a7831f94cb.addTo(map_64192451556e7fad9e763d41da0e6805);
-        
-    
-            var feature_group_3ff01ff3702e82ac51bbf785d8a44562 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var poly_line_5cea235f0aa57affb900b3e5c1a3a59b = L.polyline(
-                [[-5.974444, 106.799167], [-5.88, 106.85], [-5.85, 107.1], [-6.163611, 107.74]],
-                {"bubblingMouseEvents": true, "color": "#00e5ff", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#00e5ff", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 4}
-            ).addTo(feature_group_3ff01ff3702e82ac51bbf785d8a44562);
-        
-    
-            feature_group_3ff01ff3702e82ac51bbf785d8a44562.addTo(map_64192451556e7fad9e763d41da0e6805);
-        
-    
-            var options = {
-              position: "topleft",
-              draw: {},
-              edit: {},
-            }
-                // FeatureGroup is to store editable layers.
-                var drawnItems_draw_control_600de48138413b7cdc40ad388248ca73 =
-                    new L.featureGroup().addTo(
-                        map_64192451556e7fad9e763d41da0e6805
-                    );
-
-            options.edit.featureGroup = drawnItems_draw_control_600de48138413b7cdc40ad388248ca73;
-            var draw_control_600de48138413b7cdc40ad388248ca73 = new L.Control.Draw(
-                options
-            ).addTo( map_64192451556e7fad9e763d41da0e6805 );
-            map_64192451556e7fad9e763d41da0e6805.on(L.Draw.Event.CREATED, function(e) {
-                var layer = e.layer,
-                    type = e.layerType;
-                var coords = JSON.stringify(layer.toGeoJSON());
-                layer.on('click', function() {
-                    alert(coords);
-                    console.log(coords);
-                });
-                drawnItems_draw_control_600de48138413b7cdc40ad388248ca73.addLayer(layer);
-            });
-            map_64192451556e7fad9e763d41da0e6805.on('draw:created', function(e) {
-                drawnItems_draw_control_600de48138413b7cdc40ad388248ca73.addLayer(e.layer);
-            });
-
-            
-            document.getElementById('export').onclick = function(e) {
-                var data = drawnItems_draw_control_600de48138413b7cdc40ad388248ca73.toGeoJSON();
-                var convertedData = 'text/json;charset=utf-8,'
-                    + encodeURIComponent(JSON.stringify(data));
-                document.getElementById('export').setAttribute(
-                    'href', 'data:' + convertedData
-                );
-                document.getElementById('export').setAttribute(
-                    'download', "data.geojson"
-                );
-            }
-            
-        
-    
-            var layer_control_3edf11c376ea49b66861b273a233c228_layers = {
-                base_layers : {
-                    "Dark Mode" : tile_layer_17e9de28213d403105f54974fc1b48ab,
-                    "Normal Mode" : tile_layer_63218de02d7c1a737518aa8db7513f95,
-                },
-                overlays :  {
-                    "\ud83d\udca8 Wind Layer" : tile_layer_6a4b7ac9edee843e79e8f6b226351416,
-                    "\ud83c\udf27\ufe0f Rain Layer" : tile_layer_74e434e49188cbb59944bc3c93d71228,
-                    "\u2601\ufe0f Clouds Layer" : tile_layer_8e97be6e78cae9d69ef097ac008a9b7f,
-                    "\ud83d\udccd Lokasi Penting" : feature_group_1ee473beeb5d100fccdcc0a7831f94cb,
-                    "\ud83d\udd35 Rute Simulasi" : feature_group_3ff01ff3702e82ac51bbf785d8a44562,
-                },
-            };
-            let layer_control_3edf11c376ea49b66861b273a233c228 = L.control.layers(
-                layer_control_3edf11c376ea49b66861b273a233c228_layers.base_layers,
-                layer_control_3edf11c376ea49b66861b273a233c228_layers.overlays,
-                {
-  "position": "topright",
-  "collapsed": false,
-  "autoZIndex": true,
-}
-            ).addTo(map_64192451556e7fad9e763d41da0e6805);
-
-        
+    L.control.layers({
+        "Dark Mode": tile_layer_17e9de28213d403105f54974fc1b48ab,
+        "Normal Mode": tile_layer_63218de02d7c1a737518aa8db7513f95
+    }, {
+        "💨 Wind Layer": tile_layer_6a4b7ac9edee843e79e8f6b226351416,
+        "🌧️ Rain Layer": tile_layer_74e434e49188cbb59944bc3c93d71228,
+        "☁️ Clouds Layer": tile_layer_8e97be6e78cae9d69ef097ac008a9b7f,
+        "📍 Lokasi Penting": feature_group_1ee473beeb5d100fccdcc0a7831f94cb,
+        "🔵 Rute Simulasi": feature_group_3ff01ff3702e82ac51bbf785d8a44562
+    }, {"position": "topright", "collapsed": false}).addTo(map_64192451556e7fad9e763d41da0e6805);
 </script>
 </html>
