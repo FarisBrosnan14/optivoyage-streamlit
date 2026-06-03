@@ -42,13 +42,9 @@
                 left: 2.5% !important;
                 bottom: 10px !important;
             }
-            #dashboard_content {
-                max-height: 50vh !important; /* Agar peta tetap terlihat di HP */
-            }
+            #dashboard_content { max-height: 50vh !important; }
             #floating_brand {
-                left: 55px !important; 
-                top: 10px !important;
-                padding: 4px 10px !important;
+                left: 55px !important; top: 10px !important; padding: 4px 10px !important;
             }
             #floating_brand img { height: 25px !important; margin-right: 8px !important; }
             #floating_brand div { font-size: 13px !important; }
@@ -114,8 +110,7 @@
                 <strong style="color:#fff; font-size:10px;">📍 PENENTUAN RUTE PELAYARAN</strong>
                 <div style="margin-bottom:8px; margin-top:5px;">
                     <label style="font-size:10px; color:#ccc;">FROM (START):</label>
-                    <select id="sel_start" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;">
-                        </select>
+                    <select id="sel_start" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;"></select>
                     <div id="box_start_input" style="display:none; margin-top:4px; padding:4px; background:rgba(255,255,255,0.1); border-radius:3px;">
                         <input type="text" id="inp_start_txt" placeholder="Lat, Long (Ex: -6.1, 106.8)" style="width:95%; font-size:10px; background:#111; color:#fff; border:1px solid #555; padding:2px;">
                         <button onclick="applyCoordinates('start')" style="width:100%; margin-top:4px; font-size:9px; cursor:pointer; background:#0078A8; color:white; border:none;">PLOT COORD</button>
@@ -123,8 +118,7 @@
                 </div>
                 <div>
                     <label style="font-size:10px; color:#ccc;">TO (DESTINATION):</label>
-                    <select id="sel_end" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;">
-                        </select>
+                    <select id="sel_end" onchange="changeRouteSmart()" style="font-size:10px; width:100%; background:#222; color:white; border:1px solid #555;"></select>
                     <div id="box_end_input" style="display:none; margin-top:4px; padding:4px; background:rgba(255,255,255,0.1); border-radius:3px;">
                         <input type="text" id="inp_end_txt" placeholder="Lat, Long (Ex: -5.9, 107.1)" style="width:95%; font-size:10px; background:#111; color:#fff; border:1px solid #555; padding:2px;">
                         <button onclick="applyCoordinates('end')" style="width:100%; margin-top:4px; font-size:9px; cursor:pointer; background:#0078A8; color:white; border:none;">PLOT COORD</button>
@@ -180,6 +174,7 @@
             <table style="width:100%; font-size:11px; margin-top:10px; border-collapse: collapse; color: #eee;">
                 <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Jarak One Way</td><td id="val_dist_ow" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
                 <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Jarak Total (PP)</td><td id="val_dist_pp" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
+                <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Actual Speed (Live)</td><td id="val_actual_speed" style="padding:5px; text-align:right; font-weight:bold; color:#00e5ff;">...</td></tr>
                 <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Durasi One Way</td><td id="val_dur_ow" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
                 <tr style="border-bottom:1px solid #444;"><td style="padding:5px; color:#aaa;">Durasi Total (PP)</td><td id="val_dur_pp" style="padding:5px; text-align:right; font-weight:bold;">...</td></tr>
                 <tr style="border-bottom:1px solid #444;">
@@ -202,11 +197,8 @@
 
 <script>
     // Global Vars
-    window.updateDashboard = null; window.changeRouteSmart = null;
-    window.applyCoordinates = null; window.toggleLock = null;
-
-    var isLocked = true;
-    var dynamicLocations = {}; // Tempat menampung titik KML
+    window.updateDashboard = null; window.changeRouteSmart = null; window.applyCoordinates = null; window.toggleLock = null;
+    var isLocked = true; var dynamicLocations = {};
 
     function makeDraggable(elmnt) {
         var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -217,29 +209,27 @@
     }
 
     // ==========================================
-    // INJEKSI DATA GEOJSON GOOGLE EARTH (FARIS)
+    // INJEKSI DATA GEOJSON GOOGLE EARTH
     // ==========================================
-    var dataKmlFaris = {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[106.969031,-6.087956,0]},"properties":{"name":"Marunda 1","styleUrl":"#__managed_style_056F28F2FD3FC0F69480","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.973856,-6.086836,0]},"properties":{"name":"Marunda 2","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.993128,-6.081117,0]},"properties":{"name":"Marunda 3","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.967786,-6.071008,0]},"properties":{"name":"Marunda 4","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.799461,-5.974609,0],[106.816046,-5.981134,0],[106.862507,-6.014924,0],[106.916416,-6.055594,0],[106.96911,-6.08778,0]]},"properties":{"name":"Marunda-FSRU","stroke":"#66bb6a"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[107.740053,-6.163669,0],[107.558168,-6.079182,0],[107.3181,-5.928518,0],[107.017331,-5.896542,0],[106.98517,-5.923655,0],[106.969237,-5.969789,0],[106.954341,-6.042577,0],[106.969117,-6.087718,0]]},"properties":{"name":"Marunda-JAWASATU","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[117.470079,0.109584,0],[117.666543,-0.242816,0],[117.832433,-3.164235,0],[116.165909,-4.497397,0],[113.021161,-4.964207,0],[108.499937,-5.499523,0],[106.85756,-5.901303,0],[106.799397,-5.974519,0]]},"properties":{"name":"BADAK to FSRU","stroke":"#ffee58"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.4701,0.10123,0]},"properties":{"name":"Terminal LNG Badak Bontang","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.666667,-0.25,0]},"properties":{"name":"WP 1 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.833333,-3.166667,0]},"properties":{"name":"WP 2 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[116.166667,-4.5,0]},"properties":{"name":"WP 3 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[112.831719,-5.000208,0]},"properties":{"name":"WP 4 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[108.5,-5.5,0]},"properties":{"name":"WP 5 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.857789,-5.901927,5.277576]},"properties":{"name":"WP10","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[133.139,-2.44314,0]},"properties":{"name":"Terminal Tangguh Bintuni","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[131.825209,-2.691743,0]},"properties":{"name":"WP 1 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[130.977561,-2.74853,0]},"properties":{"name":"WP 2 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[127.788581,-2.579926,0]},"properties":{"name":"WP 3 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[115.5,-7.333333,0]},"properties":{"name":"WP 7 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[112,-6.166667,0]},"properties":{"name":"WP 8 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[108.37452,-5.531583,0]},"properties":{"name":"WP 9 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[133.144892,-2.435933,0],[132.277836,-2.598802,0],[131.825209,-2.694744,0],[130.975808,-2.732098,0],[129.855521,-2.641106,0],[127.776997,-2.564063,0],[125.682053,-3.14269,0],[125.227062,-3.566753,0],[123.668277,-4.940146,0],[123.078082,-5.817297,0],[119.776937,-7.080656,0],[115.485099,-7.307304,0],[113.184357,-6.386751,0],[111.983011,-6.143061,0],[110.376245,-6.007917,0],[108.372713,-5.530863,0],[106.857285,-5.902265,0],[106.79882,-5.972751,0]]},"properties":{"name":"TANGGUH to NR I","stroke":"#66bb6a"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[123.098718,-5.84094,389.871296]},"properties":{"name":"WP 5 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[119.795158,-7.10249,115.928855]},"properties":{"name":"WP 6 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[125.691784,-3.158824,324.467719]},"properties":{"name":"WP 4 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.799433,-5.9747,0]},"properties":{"name":"FSRU NUSANTARA REGAS 1","stroke":"#42a5f5"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[105.941667,-5.441667,0]},"properties":{"name":"FSRU LAMPUNG.","stroke":"#388e3c"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[107.740028,-6.163667,0]},"properties":{"name":"FSRU Jawa Satu Power","stroke":"#1976d2"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.88248,-6.104231,0],[106.883363,-6.083564,0],[106.985207,-5.923346,0],[107.017129,-5.896588,0],[107.318109,-5.928608,0],[107.556831,-6.078985,0],[107.740028,-6.163666,0]]},"properties":{"name":"Port Priuk to JAWA SATU POWER","stroke":"#d32f2f"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.799917,-5.974024,0],[106.8471,-5.933299,0],[106.900563,-5.912416,0],[107.018118,-5.896239,0],[107.319317,-5.927263,0],[107.559518,-6.08,0],[107.740028,-6.163666,0]]},"properties":{"name":"NR - JAWASATU ","stroke":"#ab47bc"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.799339,-5.974302,0],[106.223665,-5.707028,0],[105.941555,-5.441067,0]]},"properties":{"name":"NR ke LAMPUNG","stroke":"#303f9f"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.969141,-6.087837,1.198022]},"properties":{"name":"Start Point Marunda","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.8825,-6.104583,0]},"properties":{"name":"Start Port of Priok","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.88334,-6.083999,1.600493]},"properties":{"name":"Holding point","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.337521,-5.167665,0]},"properties":{"name":"TBA","stroke":"#66bb6a"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[106.795815,-5.977228,0],[106.801687,-5.979062,0],[106.799433,-5.974699,0],[106.794997,-5.971575,0],[106.795815,-5.977228,0]]]},"properties":{"name":"Area FSRU Center","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.808529,-5.974733,0],[106.808428,-5.973385,0],[106.808128,-5.972068,0],[106.807634,-5.970809,0],[106.806959,-5.969639,0],[106.806118,-5.968582,0],[106.805128,-5.967663,0],[106.804013,-5.966902,0],[106.802797,-5.966315,0],[106.801507,-5.965917,0],[106.800172,-5.965716,0],[106.798822,-5.965716,0],[106.797487,-5.965917,0],[106.796197,-5.966315,0],[106.794981,-5.966902,0],[106.793866,-5.967663,0],[106.792876,-5.968582,0],[106.792035,-5.969639,0],[106.79136,-5.970809,0],[106.790866,-5.972068,0],[106.790566,-5.973385,0],[106.790465,-5.974733,0],[106.790566,-5.976081,0],[106.790866,-5.977398,0],[106.791359,-5.978656,0],[106.792034,-5.979827,0],[106.792876,-5.980884,0],[106.793866,-5.981803,0],[106.794981,-5.982564,0],[106.796197,-5.983151,0],[106.797487,-5.983549,0],[106.798822,-5.98375,0],[106.800172,-5.98375,0],[106.801507,-5.983549,0],[106.802797,-5.983151,0],[106.804013,-5.982564,0],[106.805128,-5.981803,0],[106.806118,-5.980884,0],[106.80696,-5.979827,0],[106.807635,-5.978656,0],[106.808128,-5.977398,0],[106.808428,-5.976081,0],[106.808529,-5.974733,0]]},"properties":{"name":"Radius 1 km FSRU","stroke":"#00ff00"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.813061,-5.974733,0],[106.812995,-5.973411,0],[106.8128,-5.972101,0],[106.812476,-5.970817,0],[106.812028,-5.969571,0],[106.811459,-5.968374,0],[106.810775,-5.967238,0],[106.809982,-5.966175,0],[106.809088,-5.965194,0],[106.808102,-5.964305,0],[106.807032,-5.963517,0],[106.805891,-5.962836,0],[106.804688,-5.96227,0],[106.803434,-5.961824,0],[106.802143,-5.961502,0],[106.800826,-5.961308,0],[106.799497,-5.961243,0],[106.798168,-5.961308,0],[106.796851,-5.961502,0],[106.79556,-5.961824,0],[106.794306,-5.96227,0],[106.793103,-5.962836,0],[106.791962,-5.963517,0],[106.790892,-5.964305,0],[106.789906,-5.965194,0],[106.789012,-5.966175,0],[106.788219,-5.967238,0],[106.787535,-5.968374,0],[106.786966,-5.969571,0],[106.786518,-5.970817,0],[106.786194,-5.972101,0],[106.785999,-5.973411,0],[106.785933,-5.974733,0],[106.785999,-5.976055,0],[106.786194,-5.977365,0],[106.786518,-5.978649,0],[106.786966,-5.979895,0],[106.787535,-5.981092,0],[106.788219,-5.982228,0],[106.789012,-5.983291,0],[106.789906,-5.984272,0],[106.790892,-5.985161,0],[106.791962,-5.985949,0],[106.793103,-5.98663,0],[106.794306,-5.987196,0],[106.79556,-5.987642,0],[106.796851,-5.987964,0],[106.798168,-5.988158,0],[106.799497,-5.988223,0],[106.800826,-5.988158,0],[106.802143,-5.987964,0],[106.803434,-5.987642,0],[106.804688,-5.987196,0],[106.805891,-5.98663,0],[106.807032,-5.985949,0],[106.808102,-5.985161,0],[106.809088,-5.984272,0],[106.809982,-5.983291,0],[106.810775,-5.982228,0],[106.811459,-5.981092,0],[106.812028,-5.979895,0],[106.812476,-5.978649,0],[106.8128,-5.977365,0],[106.812995,-5.976055,0],[106.813061,-5.974733,0]]},"properties":{"name":"Radius 1.5km FSRU (Line Only)","stroke":"#ff0000"}}]};
+    var dataKmlFaris = {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[106.969031,-6.087956,0]},"properties":{"name":"Marunda 1","styleUrl":"#__managed_style_056F28F2FD3FC0F69480","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.973856,-6.086836,0]},"properties":{"name":"Marunda 2","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.993128,-6.081117,0]},"properties":{"name":"Marunda 3","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.967786,-6.071008,0]},"properties":{"name":"Marunda 4","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.799461,-5.974609,0],[106.816046,-5.981134,0],[106.862507,-6.014924,0],[106.916416,-6.055594,0],[106.96911,-6.08778,0]]},"properties":{"name":"Marunda-FSRU","stroke":"#66bb6a"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[107.740053,-6.163669,0],[107.558168,-6.079182,0],[107.3181,-5.928518,0],[107.017331,-5.896542,0],[106.98517,-5.923655,0],[106.969237,-5.969789,0],[106.954341,-6.042577,0],[106.969117,-6.087718,0]]},"properties":{"name":"Marunda-JAWASATU","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[117.470079,0.109584,0],[117.666543,-0.242816,0],[117.832433,-3.164235,0],[116.165909,-4.497397,0],[113.021161,-4.964207,0],[108.499937,-5.499523,0],[106.85756,-5.901303,0],[106.799397,-5.974519,0]]},"properties":{"name":"BADAK to FSRU","stroke":"#ffee58"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.4701,0.10123,0]},"properties":{"name":"Terminal LNG Badak Bontang","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.666667,-0.25,0]},"properties":{"name":"WP 1 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[117.833333,-3.166667,0]},"properties":{"name":"WP 2 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[116.166667,-4.5,0]},"properties":{"name":"WP 3 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[112.831719,-5.000208,0]},"properties":{"name":"WP 4 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[108.5,-5.5,0]},"properties":{"name":"WP 5 (Badak)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.857789,-5.901927,5.277576]},"properties":{"name":"WP10","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[133.139,-2.44314,0]},"properties":{"name":"Terminal Tangguh Bintuni","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[131.825209,-2.691743,0]},"properties":{"name":"WP 1 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[130.977561,-2.74853,0]},"properties":{"name":"WP 2 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[127.788581,-2.579926,0]},"properties":{"name":"WP 3 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[115.5,-7.333333,0]},"properties":{"name":"WP 7 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[112,-6.166667,0]},"properties":{"name":"WP 8 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[108.37452,-5.531583,0]},"properties":{"name":"WP 9 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[133.144892,-2.435933,0],[132.277836,-2.598802,0],[131.825209,-2.694744,0],[130.975808,-2.732098,0],[129.855521,-2.641106,0],[127.776997,-2.564063,0],[125.682053,-3.14269,0],[125.227062,-3.566753,0],[123.668277,-4.940146,0],[123.078082,-5.817297,0],[119.776937,-7.080656,0],[115.485099,-7.307304,0],[113.184357,-6.386751,0],[111.983011,-6.143061,0],[110.376245,-6.007917,0],[108.372713,-5.530863,0],[106.857285,-5.902265,0],[106.79882,-5.972751,0]]},"properties":{"name":"TANGGUH to NR I","stroke":"#66bb6a"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[123.098718,-5.84094,389.871296]},"properties":{"name":"WP 5 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[119.795158,-7.10249,115.928855]},"properties":{"name":"WP 6 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[125.691784,-3.158824,324.467719]},"properties":{"name":"WP 4 (Tangguh)","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.799433,-5.9747,0]},"properties":{"name":"FSRU NUSANTARA REGAS 1","stroke":"#42a5f5"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[105.941667,-5.441667,0]},"properties":{"name":"FSRU LAMPUNG.","stroke":"#388e3c"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[107.740028,-6.163667,0]},"properties":{"name":"FSRU Jawa Satu Power","stroke":"#1976d2"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.88248,-6.104231,0],[106.883363,-6.083564,0],[106.985207,-5.923346,0],[107.017129,-5.896588,0],[107.318109,-5.928608,0],[107.556831,-6.078985,0],[107.740028,-6.163666,0]]},"properties":{"name":"Port Priuk to JAWA SATU POWER","stroke":"#d32f2f"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.799917,-5.974024,0],[106.8471,-5.933299,0],[106.900563,-5.912416,0],[107.018118,-5.896239,0],[107.319317,-5.927263,0],[107.559518,-6.08,0],[107.740028,-6.163666,0]]},"properties":{"name":"NR - JAWASATU ","stroke":"#ab47bc"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.799339,-5.974302,0],[106.223665,-5.707028,0],[105.941555,-5.441067,0]]},"properties":{"name":"NR ke LAMPUNG","stroke":"#303f9f"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.969141,-6.087837,1.198022]},"properties":{"name":"Start Point Marunda","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.8825,-6.104583,0]},"properties":{"name":"Start Port of Priok","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.88334,-6.083999,1.600493]},"properties":{"name":"Holding point","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.337521,-5.167665,0]},"properties":{"name":"TBA","stroke":"#66bb6a"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.799433,-5.9747,0]},"properties":{"name":"Titik A","stroke":"#388e3c"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.801667,-5.979167,0]},"properties":{"name":"Titik B","stroke":"#388e3c"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.795,-5.971667,0]},"properties":{"name":"Titik C","stroke":"#388e3c"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[106.795833,-5.977333,0]},"properties":{"name":"Titik D","stroke":"#388e3c"}},{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[106.795815,-5.977228,0],[106.801687,-5.979062,0],[106.799433,-5.974699,0],[106.794997,-5.971575,0],[106.795815,-5.977228,0]]]},"properties":{"name":"Area FSRU Center","stroke":"#fbc02d"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.808529,-5.974733,0],[106.808428,-5.973385,0],[106.808128,-5.972068,0],[106.807634,-5.970809,0],[106.806959,-5.969639,0],[106.806118,-5.968582,0],[106.805128,-5.967663,0],[106.804013,-5.966902,0],[106.802797,-5.966315,0],[106.801507,-5.965917,0],[106.800172,-5.965716,0],[106.798822,-5.965716,0],[106.797487,-5.965917,0],[106.796197,-5.966315,0],[106.794981,-5.966902,0],[106.793866,-5.967663,0],[106.792876,-5.968582,0],[106.792035,-5.969639,0],[106.79136,-5.970809,0],[106.790866,-5.972068,0],[106.790566,-5.973385,0],[106.790465,-5.974733,0],[106.790566,-5.976081,0],[106.790866,-5.977398,0],[106.791359,-5.978656,0],[106.792034,-5.979827,0],[106.792876,-5.980884,0],[106.793866,-5.981803,0],[106.794981,-5.982564,0],[106.796197,-5.983151,0],[106.797487,-5.983549,0],[106.798822,-5.98375,0],[106.800172,-5.98375,0],[106.801507,-5.983549,0],[106.802797,-5.983151,0],[106.804013,-5.982564,0],[106.805128,-5.981803,0],[106.806118,-5.980884,0],[106.80696,-5.979827,0],[106.807635,-5.978656,0],[106.808128,-5.977398,0],[106.808428,-5.976081,0],[106.808529,-5.974733,0]]},"properties":{"name":"Radius 1 km FSRU","stroke":"#00ff00"}},{"type":"Feature","geometry":{"type":"LineString","coordinates":[[106.813061,-5.974733,0],[106.812995,-5.973411,0],[106.8128,-5.972101,0],[106.812476,-5.970817,0],[106.812028,-5.969571,0],[106.811459,-5.968374,0],[106.810775,-5.967238,0],[106.809982,-5.966175,0],[106.809088,-5.965194,0],[106.808102,-5.964305,0],[106.807032,-5.963517,0],[106.805891,-5.962836,0],[106.804688,-5.96227,0],[106.803434,-5.961824,0],[106.802143,-5.961502,0],[106.800826,-5.961308,0],[106.799497,-5.961243,0],[106.798168,-5.961308,0],[106.796851,-5.961502,0],[106.79556,-5.961824,0],[106.794306,-5.96227,0],[106.793103,-5.962836,0],[106.791962,-5.963517,0],[106.790892,-5.964305,0],[106.789906,-5.965194,0],[106.789012,-5.966175,0],[106.788219,-5.967238,0],[106.787535,-5.968374,0],[106.786966,-5.969571,0],[106.786518,-5.970817,0],[106.786194,-5.972101,0],[106.785999,-5.973411,0],[106.785933,-5.974733,0],[106.785999,-5.976055,0],[106.786194,-5.977365,0],[106.786518,-5.978649,0],[106.786966,-5.979895,0],[106.787535,-5.981092,0],[106.788219,-5.982228,0],[106.789012,-5.983291,0],[106.789906,-5.984272,0],[106.790892,-5.985161,0],[106.791962,-5.985949,0],[106.793103,-5.98663,0],[106.794306,-5.987196,0],[106.79556,-5.987642,0],[106.796851,-5.987964,0],[106.798168,-5.988158,0],[106.799497,-5.988223,0],[106.800826,-5.988158,0],[106.802143,-5.987964,0],[106.803434,-5.987642,0],[106.804688,-5.987196,0],[106.805891,-5.98663,0],[106.807032,-5.985949,0],[106.808102,-5.985161,0],[106.809088,-5.984272,0],[106.809982,-5.983291,0],[106.810775,-5.982228,0],[106.811459,-5.981092,0],[106.812028,-5.979895,0],[106.812476,-5.978649,0],[106.8128,-5.977365,0],[106.812995,-5.976055,0],[106.813061,-5.974733,0]]},"properties":{"name":"Radius 1.5km FSRU (Line Only)","stroke":"#ff0000"}}]};
 
-    // INISIALISASI PETA (Normal Mode Default Pertama)
+    // INISIALISASI PETA (Normal Mode Default)
     var map_64192451556e7fad9e763d41da0e6805 = L.map("map_64192451556e7fad9e763d41da0e6805", { center: [-5.974444, 106.799167], crs: L.CRS.EPSG3857, zoom: 8, zoomControl: true, doubleClickZoom: false });
-    var tile_layer_63218de02d7c1a737518aa8db7513f95 = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map_64192451556e7fad9e763d41da0e6805); // Peta Normal diset AddTo
+    var tile_layer_63218de02d7c1a737518aa8db7513f95 = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map_64192451556e7fad9e763d41da0e6805);
     var tile_layer_17e9de28213d403105f54974fc1b48ab = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
     
     var layerBlue = L.featureGroup().addTo(map_64192451556e7fad9e763d41da0e6805);
     var lineBlue = L.polyline([], {"color": "#00e5ff", "weight": 4}).addTo(layerBlue);
     var markersBlue = [];
 
-    // FOLDER KML
     var kmlFolders = { points: L.layerGroup().addTo(map_64192451556e7fad9e763d41da0e6805), route_tangguh: L.layerGroup().addTo(map_64192451556e7fad9e763d41da0e6805), route_badak: L.layerGroup().addTo(map_64192451556e7fad9e763d41da0e6805), route_other: L.layerGroup().addTo(map_64192451556e7fad9e763d41da0e6805), areas: L.layerGroup().addTo(map_64192451556e7fad9e763d41da0e6805) };
     
     window.onload = function() {
         makeDraggable(document.getElementById("dashboard_container"));
         window.toggleDashboard = function() { var c = document.getElementById("dashboard_content"); var b = document.getElementById("btn_toggle"); if (c.style.display === "none") { c.style.display = "block"; b.innerHTML = "-"; } else { c.style.display = "none"; b.innerHTML = "+"; } };
 
-        // 1. POPULATE DROPDOWN & KML FOLDERS DARI GEOJSON
+        // 1. POPULATE DROPDOWN & KML FOLDERS
         dataKmlFaris.features.forEach(function(f, idx) {
-            // Sortir Layer
             var geojsonObj = L.geoJSON(f, {
                 style: function(f) { return { color: (f.properties && f.properties.stroke) ? f.properties.stroke : '#00e5ff', weight: 3, opacity: 0.85 }; },
                 pointToLayer: function (f, latlng) {
@@ -267,7 +257,6 @@
             }
         });
 
-        // Isi Menu Dropdown Secara Otomatis
         var selStart = document.getElementById('sel_start'); var selEnd = document.getElementById('sel_end');
         selStart.innerHTML = ""; selEnd.innerHTML = "";
         for (var k in dynamicLocations) {
@@ -277,7 +266,6 @@
         selStart.innerHTML += `<option value="custom">-- Custom Koordinat (Manual) --</option>`;
         selEnd.innerHTML += `<option value="custom">-- Custom Koordinat (Manual) --</option>`;
 
-        // Pastikan dropdown Start dan End tidak sama defaultnya
         var keys = Object.keys(dynamicLocations);
         if(keys.length > 1) { selStart.value = keys[0]; selEnd.value = keys[1]; }
         
@@ -314,14 +302,12 @@
         var startCoords = dynamicLocations[startKey]; var endCoords = dynamicLocations[endKey];
         var foundRoute = null;
 
-        // Cari di KML apakah ada rute yang menyambungkan A ke B
         for (var i=0; i < dataKmlFaris.features.length; i++) {
             var f = dataKmlFaris.features[i];
             if (f.geometry.type === 'LineString') {
-                var coords = f.geometry.coordinates; // Format KML: [lng, lat]
+                var coords = f.geometry.coordinates; 
                 if (coords.length > 1) {
                     var cStart = coords[0]; var cEnd = coords[coords.length - 1];
-                    // Cek jarak (toleransi ~5km atau 0.05 derajat)
                     var distAtoA = Math.abs(cStart[1] - startCoords.lat) + Math.abs(cStart[0] - startCoords.lng);
                     var distBtoB = Math.abs(cEnd[1] - endCoords.lat) + Math.abs(cEnd[0] - endCoords.lng);
                     var distAtoB = Math.abs(cStart[1] - endCoords.lat) + Math.abs(cStart[0] - endCoords.lng);
@@ -349,7 +335,7 @@
                 var newLatLng = L.latLng(lat, lng);
                 if(type === 'start') { markersBlue[0].setLatLng(newLatLng); } else { markersBlue[markersBlue.length-1].setLatLng(newLatLng); }
                 var s = markersBlue[0].getLatLng(); var e = markersBlue[markersBlue.length-1].getLatLng();
-                rebuildRoute([[s.lat, s.lng], [e.lat, e.lng]]); window.updateDashboard(); // Buat garis lurus
+                rebuildRoute([[s.lat, s.lng], [e.lat, e.lng]]); window.updateDashboard();
             }
         }
     }
@@ -379,12 +365,36 @@
         var c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); return R*c*0.539957; 
     }
 
-    window.updateDashboard = function() {
+    // FUNGSI FETCH WEATHER UNTUK ACTUAL SPEED LIVE
+    async function fetchWeather(lat, lng) {
+        const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 2000); 
+        try {
+            const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=wind_speed_10m,wind_direction_10m,wave_height&wind_speed_unit=kn`, { signal: controller.signal });
+            clearTimeout(timeoutId); const data = await response.json();
+            
+            let wind = data.current.wind_speed_10m || 0; 
+            let wave = data.current.wave_height || (wind * 0.05); 
+            
+            let penalty = 0; 
+            if(wave > 0.5) penalty += 0.5; 
+            if(wave > 1.5) penalty += 1.5; 
+            if(wind > 15) penalty += 1.0;
+            
+            return Math.max(2, (parseFloat(document.getElementById('inp_speed').value) || 10) - penalty);
+        } catch (error) {
+            return parseFloat(document.getElementById('inp_speed').value) || 10;
+        }
+    }
+
+    // FUNGSI UTAMA KALKULASI BBM YANG TELAH DIPERBAIKI (TIDAK ERROR LAGI)
+    window.updateDashboard = async function() {
         try {
             var faktor = parseFloat(document.getElementById('inp_faktor').value) || 51.07;
             var speed = parseFloat(document.getElementById('inp_speed').value) || 10;
             var stdHours = parseFloat(document.getElementById('inp_std_hours').value) || 0;
             var stdFaktor = parseFloat(document.getElementById('inp_std_faktor').value) || 0;
+            var price = parseFloat(document.getElementById('inp_price').value) || 23000;
+            var margin = parseFloat(document.getElementById('inp_margin').value) || 0;
 
             var res = { path: [], dist: 0 };
             for(var i=0; i<markersBlue.length; i++){
@@ -393,29 +403,44 @@
             }
             lineBlue.setLatLngs(res.path);
             
-            var durasiPP = (res.dist * 2) / speed;
-            var bbmTotal = (document.getElementById('sel_unit').value === 'lnm' ? (res.dist * 2) * faktor : durasiPP * faktor) + (stdHours * stdFaktor);
-            var costReal = bbmTotal * (parseFloat(document.getElementById('inp_price').value) || 23000);
+            // Kalkulasi Actual Speed
+            var actualSpeed = speed; 
+            if(markersBlue.length > 0) { 
+                try { 
+                    actualSpeed = await fetchWeather(markersBlue[0].getLatLng().lat, markersBlue[0].getLatLng().lng); 
+                } catch(err) { } 
+            }
+            
+            var durasiOW = res.dist / actualSpeed;
+            var durasiPP = (res.dist * 2) / actualSpeed;
+            
+            var bbmMoving = (document.getElementById('sel_unit').value === 'lnm' ? (res.dist * 2) * faktor : durasiPP * faktor);
+            var bbmStandby = stdHours * stdFaktor;
+            var bbmTotal = bbmMoving + bbmStandby;
 
-            document.getElementById('val_actual_speed').innerHTML = speed.toFixed(1) + " kn";
-            document.getElementById('val_dur_ow').innerHTML = (res.dist / speed).toFixed(1) + " h";
-            document.getElementById('val_dur_pp').innerHTML = durasiPP.toFixed(1) + " h";
-            document.getElementById('val_dist_ow').innerHTML = res.dist.toFixed(2) + " NM";
-            document.getElementById('val_dist_pp').innerHTML = (res.dist * 2).toFixed(2) + " NM";
-            document.getElementById('val_bbm_std').innerHTML = (stdHours * stdFaktor).toFixed(0) + " L";
-            document.getElementById('val_bbm').innerHTML = Math.round(bbmTotal).toLocaleString('id-ID') + " L";
-            document.getElementById('val_cost_real').innerHTML = "Rp " + Math.round(costReal).toLocaleString('id-ID');
-        } catch(e) { console.log(e.message); }
+            var costReal = bbmTotal * price;
+            var costMargin = costReal * (1 + (margin/100));
+
+            // Memasukkan hasil hitungan ke tabel secara aman
+            if(document.getElementById('val_actual_speed')) document.getElementById('val_actual_speed').innerHTML = actualSpeed.toFixed(1) + " kn";
+            if(document.getElementById('val_dur_ow')) document.getElementById('val_dur_ow').innerHTML = durasiOW.toFixed(1) + " h";
+            if(document.getElementById('val_dur_pp')) document.getElementById('val_dur_pp').innerHTML = durasiPP.toFixed(1) + " h";
+            if(document.getElementById('val_dist_ow')) document.getElementById('val_dist_ow').innerHTML = res.dist.toFixed(2) + " NM";
+            if(document.getElementById('val_dist_pp')) document.getElementById('val_dist_pp').innerHTML = (res.dist * 2).toFixed(2) + " NM";
+            if(document.getElementById('val_bbm_std')) document.getElementById('val_bbm_std').innerHTML = bbmStandby.toFixed(0) + " L";
+            if(document.getElementById('val_bbm')) document.getElementById('val_bbm').innerHTML = Math.round(bbmTotal).toLocaleString('id-ID') + " L";
+            if(document.getElementById('val_cost_real')) document.getElementById('val_cost_real').innerHTML = "Rp " + Math.round(costReal).toLocaleString('id-ID');
+            if(document.getElementById('val_cost_margin')) document.getElementById('val_cost_margin').innerHTML = "Rp " + Math.round(costMargin).toLocaleString('id-ID');
+        } catch(e) { console.error("Kalkulasi Error: " + e.message); }
     }
 
     L.control.layers({
-        "Normal Mode": tile_layer_63218de02d7c1a737518aa8db7513f95, // Diset urutan atas agar jadi Default di menu
+        "Normal Mode": tile_layer_63218de02d7c1a737518aa8db7513f95,
         "Dark Mode": tile_layer_17e9de28213d403105f54974fc1b48ab
     }, {
         "🔵 Rute Simulasi": layerBlue
     }, {"position": "topright", "collapsed": false}).addTo(map_64192451556e7fad9e763d41da0e6805);
 
-    // Fitur klik ganda untuk tambah titik tengah di lintasan
     lineBlue.on('dblclick', function(e){
         if(isLocked) { alert("Unlock First!"); return; }
         var minDistance = Infinity; var bestIdx = 1;
