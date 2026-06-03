@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 # Konfigurasi halaman utama (Favicon diubah ke pertamina.png di sini)
-st.set_page_config(page_title="NR OptiVoyage Dashboard", page_icon="pertamina.png", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="NR OptiVoyage Dashboard", page_icon="pertamina2.png", layout="wide", initial_sidebar_state="collapsed")
 
 # CSS Paksaan agar Streamlit benar-benar Full Screen 100% tanpa sisa hitam
 st.markdown("""
